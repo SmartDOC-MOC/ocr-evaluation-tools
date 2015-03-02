@@ -3,7 +3,7 @@
 accdist \- displays the distribution of character accuracies
 .SH SYNOPSIS
 .B accdist
-accuracy_report1 accuracy_report2 ... >xyfile
+[ -f report_files_list | accuracy_report1 accuracy_report2 ... ] >xyfile
 .SH DESCRIPTION
 .I Accdist
 writes to stdout the distribution of character accuracies found in the input
@@ -12,6 +12,11 @@ reports.  For
 = 0 to 100, the percentage of characters recognized with at least
 .IR X %
 accuracy is reported.
+.SH OPTIONS
+.TP
+.B \-f
+Specify the name of a file containing the list of report to part. One report 
+per line.
 .SH "SEE ALSO"
 .IR accuracy (1)
 and

@@ -22,13 +22,23 @@
  *
  **********************************************************************/
 
+#include "util.h"
 #include "accrpt.h"
 #include "dist.h"
 
-#define usage  "accuracy_report1 accuracy_report2 ... >xyfile"
+#define usage  "[ -f report_files_list | accuracy_report1 accuracy_report2 ... ] >xyfile"
 
 Accdata accdata;
 Dist dist;
+
+char *inputfilename;
+
+Option option[] =
+{
+    {'f', &inputfilename, NULL},
+    {'\0'}
+};
+
 
 /**********************************************************************/
 
@@ -48,7 +58,8 @@ int argc;
 char *argv[];
 {
     int i;
-    initialize(&argc, argv, usage, NULL);
+    initialize(&argc, argv, usage, option);
+    process_all_files_from(inputfilename, &process_file);
     for (i = 0; i < argc; i++)
 	process_file(argv[i]);
     write_dist(&dist, NULL);
