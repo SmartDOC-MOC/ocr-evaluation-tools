@@ -22,13 +22,22 @@
  *
  **********************************************************************/
 
+#include "util.h"
 #include "ci.h"
 #include "wacrpt.h"
 
-#define usage  "wordacc_report1 wordacc_report2 ... >resultfile"
+#define usage  "[ -f report_files_list | wordacc_report1 wordacc_report2 ... ] >resultfile"
 
 Wacdata wacdata;
 Obslist obslist;
+
+char *inputfilename;
+
+Option option[] =
+{
+    {'f', &inputfilename, NULL},
+    {'\0'}
+};
 
 /**********************************************************************/
 
@@ -63,11 +72,14 @@ int argc;
 char *argv[];
 {
     int i;
-    initialize(&argc, argv, usage, NULL);
-    if (argc < 2)
-	error("not enough input files", Exit);
+    initialize(&argc, argv, usage, option);
+    if (argc < 2 && !inputfilename)
+    error("not enough input files", Exit);
+
+    process_all_files_from(inputfilename, &process_file);
+
     for (i = 0; i < argc; i++)
-	process_file(argv[i]);
+    process_file(argv[i]);
     write_results();
     return 0;
 }
