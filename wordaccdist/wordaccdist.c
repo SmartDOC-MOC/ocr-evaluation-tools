@@ -22,13 +22,22 @@
  *
  **********************************************************************/
 
+#include "util.h"
 #include "dist.h"
 #include "wacrpt.h"
 
-#define usage  "wordacc_report1 wordacc_report2 ... >xyfile"
+#define usage  "[ -f report_files_list | wordacc_report1 wordacc_report2 ... ] >xyfile"
 
 Wacdata wacdata;
 Dist dist;
+
+char *inputfilename;
+
+Option option[] =
+{
+    {'f', &inputfilename, NULL},
+    {'\0'}
+};
 
 /**********************************************************************/
 
@@ -49,7 +58,8 @@ int argc;
 char *argv[];
 {
     int i;
-    initialize(&argc, argv, usage, NULL);
+    initialize(&argc, argv, usage, option);
+    process_all_files_from(inputfilename, &process_file);
     for (i = 0; i < argc; i++)
 	process_file(argv[i]);
     write_dist(&dist, NULL);
