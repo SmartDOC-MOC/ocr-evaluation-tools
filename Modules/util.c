@@ -228,5 +228,45 @@ Boolean exit;
 {
     fprintf(stderr, "%s: %s \"%s\"\n", exec_name, message, string);
     if (exit)
-	quit(errstatus);
+    quit(errstatus);
+}
+/**********************************************************************/
+
+#ifndef NEWLINE
+#define NEWLINE           '\n'
+#endif
+
+static char line_filename[1024];
+
+static Boolean read_filename(f)
+FILE *f;
+{
+    return(fgets(line_filename, sizeof(line_filename) - 1, f) ? True : False);
+}
+
+/**********************************************************************/
+
+void process_all_files_from(inputfilename, processing_function)
+char *inputfilename;
+void(*processing_function)(/*char *filename*/);
+{
+    FILE *f;
+    if (inputfilename)
+    {   
+        if (file_exists(inputfilename)) {
+            f = open_file(inputfilename, "r");
+            while (read_filename(f))
+            {
+                if (line_filename[0] != NEWLINE)
+                {
+                    /* remove trailing newline */
+                    line_filename[strlen(line_filename)-1] = '\0';
+                    processing_function(line_filename);
+                }
+            }
+            close_file(f);
+        } else {
+            error_string("file does not exist", inputfilename, Continue);
+        }
+    }
 }

@@ -130,4 +130,10 @@ void error_string(/* char *message, char *string, Exit/Continue */);
 			/* writes an error message, including "string" in
 			   quotes, then quits or returns */
 
+
+
+void process_all_files_from(/* char *inputfile, void(*process_function)(char *filename) */);
+			/* Processes all files given in "inputfile" with "process_function" */
+
+
 #endif

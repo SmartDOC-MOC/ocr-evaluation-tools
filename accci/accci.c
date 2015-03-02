@@ -66,39 +66,16 @@ void write_results()
 }
 /**********************************************************************/
 
-static char line[1024];
-#define NEWLINE           '\n'
-
-static Boolean read_line(f)
-FILE *f;
-{
-    return(fgets(line, sizeof(line) - 1, f) ? True : False);
-}
-/**********************************************************************/
-
 int main(argc, argv)
 int argc;
 char *argv[];
 {
     int i;
-    FILE *f;
     initialize(&argc, argv, usage, option);
     if (argc < 2 && !inputfilename)
     error("not enough input files", Exit);
 
-    if (inputfilename)
-    {   
-        f = open_file(inputfilename, "r");
-        while (read_line(f))
-        {
-            if (line[0] != NEWLINE)
-            {
-                /* remove trailing newline */
-                line[strlen(line)-1] = '\0';
-                process_file(line);
-            }
-        }
-    }
+    process_all_files_from(inputfilename, &process_file);
 
     for (i = 0; i < argc; i++)
 	process_file(argv[i]);
