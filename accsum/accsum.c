@@ -56,6 +56,7 @@ char *argv[];
     initialize(&argc, argv, usage, option);
     if (argc < 2 && !inputfilename)
     error("not enough input files", Exit);
+    process_all_files_from(inputfilename, &process_file);
     for (i = 0; i < argc; i++)
 	process_file(argv[i]);
     write_accrpt(&accdata, NULL);
