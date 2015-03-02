@@ -3,7 +3,7 @@
 wordaccsum \- combines word accuracy reports
 .SH SYNOPSIS
 .B wordaccsum
-wordacc_report1 wordacc_report2 ... >wordacc_report
+[ -f report_files_list | wordacc_report1 wordacc_report2 ... ] >wordacc_report
 .SH DESCRIPTION
 .I Wordaccsum
 combines two or more word accuracy reports and writes an aggregate report
@@ -11,6 +11,11 @@ to stdout.  The input reports must have been produced by either
 .I wordacc
 or
 .IR wordaccsum .
+.SH OPTIONS
+.TP
+.B \-f
+Specify the name of a file containing the list of reports to process. One report 
+file name per line.
 .SH "SEE ALSO"
 .IR accsum (1),
 .IR editopsum (1),

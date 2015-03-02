@@ -22,12 +22,28 @@
  *
  **********************************************************************/
 
+#include "util.h"
 #include "wacrpt.h"
 
-#define usage  "wordacc_report1 wordacc_report2 ... >wordacc_report"
+#define usage  "[ -f report_files_list | wordacc_report1 wordacc_report2 ... ] >wordacc_report"
 
 Wacdata wacdata;
 
+char *inputfilename;
+
+Option option[] =
+{
+    {'f', &inputfilename, NULL},
+    {'\0'}
+};
+
+/**********************************************************************/
+
+void process_file(filename)
+char *filename;
+{
+    read_wacrpt(&wacdata, filename);
+}
 /**********************************************************************/
 
 int main(argc, argv)
@@ -35,11 +51,12 @@ int argc;
 char *argv[];
 {
     int i;
-    initialize(&argc, argv, usage, NULL);
-    if (argc < 2)
+    initialize(&argc, argv, usage, option);
+    if (argc < 2 && !inputfilename)
 	error("not enough input files", Exit);
+	process_all_files_from(inputfilename, &process_file);
     for (i = 0; i < argc; i++)
-	read_wacrpt(&wacdata, argv[i]);
+	process_file(argv[i]);
     write_wacrpt(&wacdata, NULL);
     return 0;
 }
