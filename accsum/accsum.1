@@ -3,7 +3,7 @@
 accsum \- combines character accuracy reports
 .SH SYNOPSIS
 .B accsum
-accuracy_report1 accuracy_report2 ... >accuracy_report
+[ -f report_files_list | accuracy_report1 accuracy_report2 ... ] >accuracy_report
 .SH DESCRIPTION
 .I Accsum
 combines two or more character accuracy reports and writes an aggregate report
@@ -11,6 +11,11 @@ to stdout.  The input reports must have been produced by either
 .I accuracy
 or
 .IR accsum .
+.SH OPTIONS
+.TP
+.B \-f
+Specify the name of a file containing the list of report to part. One report 
+per line.
 .SH "SEE ALSO"
 .IR accuracy (1),
 .IR editopsum (1)

@@ -22,11 +22,29 @@
  *
  **********************************************************************/
 
+#include "util.h"
 #include "accrpt.h"
 
-#define usage  "accuracy_report1 accuracy_report2 ... >accuracy_report"
+#define usage  "[ -f report_files_list | accuracy_report1 accuracy_report2 ... ] >accuracy_report"
 
 Accdata accdata;
+
+char *inputfilename;
+
+Option option[] =
+{
+    {'f', &inputfilename, NULL},
+    {'\0'}
+};
+
+
+/**********************************************************************/
+void process_file(filename)
+char *filename;
+{
+	read_accrpt(&accdata, filename);
+}
+
 
 /**********************************************************************/
 
@@ -35,11 +53,11 @@ int argc;
 char *argv[];
 {
     int i;
-    initialize(&argc, argv, usage, NULL);
-    if (argc < 2)
-	error("not enough input files", Exit);
+    initialize(&argc, argv, usage, option);
+    if (argc < 2 && !inputfilename)
+    error("not enough input files", Exit);
     for (i = 0; i < argc; i++)
-	read_accrpt(&accdata, argv[i]);
+	process_file(argv[i]);
     write_accrpt(&accdata, NULL);
     return 0;
 }
