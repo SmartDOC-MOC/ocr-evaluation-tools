@@ -22,13 +22,22 @@
  *
  **********************************************************************/
 
+#include "util.h"
 #include "accrpt.h"
 #include "ci.h"
 
-#define usage  "accuracy_report1 accuracy_report2 ... >resultfile"
+#define usage  "[ -f report_files_list | accuracy_report1 accuracy_report2 ... ] >resultfile"
 
 Accdata accdata;
 Obslist obslist;
+
+char *inputfilename;
+
+Option option[] =
+{
+    {'f', &inputfilename, NULL},
+    {'\0'}
+};
 
 /**********************************************************************/
 
@@ -57,14 +66,40 @@ void write_results()
 }
 /**********************************************************************/
 
+static char line[1024];
+#define NEWLINE           '\n'
+
+static Boolean read_line(f)
+FILE *f;
+{
+    return(fgets(line, sizeof(line) - 1, f) ? True : False);
+}
+/**********************************************************************/
+
 int main(argc, argv)
 int argc;
 char *argv[];
 {
     int i;
-    initialize(&argc, argv, usage, NULL);
-    if (argc < 2)
-	error("not enough input files", Exit);
+    FILE *f;
+    initialize(&argc, argv, usage, option);
+    if (argc < 2 && !inputfilename)
+    error("not enough input files", Exit);
+
+    if (inputfilename)
+    {   
+        f = open_file(inputfilename, "r");
+        while (read_line(f))
+        {
+            if (line[0] != NEWLINE)
+            {
+                /* remove trailing newline */
+                line[strlen(line)-1] = '\0';
+                process_file(line);
+            }
+        }
+    }
+
     for (i = 0; i < argc; i++)
 	process_file(argv[i]);
     write_results();
